@@ -1,0 +1,274 @@
+2026-04-14 00:33:29 | INFO     | app.main | MatML API starting up — loading ML models...
+2026-04-14 00:33:31 | INFO     | app.ml.loader | Loaded model artifact: concrete_best_model.pkl
+2026-04-14 00:33:31 | INFO     | app.ml.loader | Loaded model artifact: concrete_scaler.pkl
+2026-04-14 00:33:32 | INFO     | app.ml.loader | Loaded model artifact: steel_best_model.pkl
+2026-04-14 00:33:32 | INFO     | app.ml.loader | Loaded model artifact: steel_scaler.pkl
+2026-04-14 00:33:32 | ERROR    | app.ml.loader | Failed to load materials_reg_model.pkl: module 'sklearn._loss._loss' has no attribute '__pyx_unpickle_CyHalfSquaredError'
+2026-04-14 00:33:32 | INFO     | app.ml.loader | Loaded model artifact: materials_cls_model.pkl
+2026-04-14 00:33:32 | INFO     | app.ml.loader | Loaded model artifact: materials_scaler.pkl
+2026-04-14 00:33:32 | INFO     | app.ml.loader | Models ready: ['concrete_model', 'concrete_scaler', 'steel_model', 'steel_scaler', 'materials_cls_model', 'materials_scaler']
+2026-04-14 00:33:32 | WARNING  | app.ml.loader | Models in MOCK mode: ['materials_reg_model']
+2026-04-14 00:33:32 | INFO     | app.main | Startup complete. Live models: ['concrete_model', 'concrete_scaler', 'steel_model', 'steel_scaler', 'materials_cls_model', 'materials_scaler']
+2026-04-14 00:46:19 | INFO     | app.routers.concrete | Concrete prediction request received: {'cement': 540.0, 'blast_furnace_slag': 0.0, 'fly_ash': 0.0, 'water': 162.0, 'superplasticizer': 2.5, 'coarse_aggregate': 1040.0, 'fine_aggregate': 676.0, 'age': 28}
+2026-04-14 00:46:19 | ERROR    | app.services.concrete_service | Concrete prediction failed: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- age
+- blast_furnace_slag
+- cement
+- coarse_aggregate
+- fine_aggregate
+- ...
+Feature names seen at fit time, yet now missing:
+- Age (day)
+- Blast Furnace Slag (component 2)(kg in a m^3 mixture)
+- Cement (component 1)(kg in a m^3 mixture)
+- Coarse Aggregate  (component 6)(kg in a m^3 mixture)
+- Fine Aggregate (component 7)(kg in a m^3 mixture)
+- ...
+Traceback (most recent call last):
+  File "C:\Users\abhis\Downloads\MatMl-Spurtii\backend\app\services\concrete_service.py", line 36, in run_concrete_prediction
+    result = predict_concrete(model, scaler, input_data)
+  File "C:\Users\abhis\Downloads\MatMl-Spurtii\backend\app\ml\inference.py", line 65, in predict_concrete
+    X_scaled = scaler.transform(X)
+  File "C:\Users\abhis\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\_set_output.py", line 316, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\abhis\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\preprocessing\_data.py", line 1094, in transform
+    X = validate_data(
+        self,
+    ...<6 lines>...
+        ensure_all_finite="allow-nan",
+    )
+  File "C:\Users\abhis\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\validation.py", line 2877, in validate_data
+    _check_feature_names(_estimator, X, reset=reset)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\abhis\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\validation.py", line 2729, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- age
+- blast_furnace_slag
+- cement
+- coarse_aggregate
+- fine_aggregate
+- ...
+Feature names seen at fit time, yet now missing:
+- Age (day)
+- Blast Furnace Slag (component 2)(kg in a m^3 mixture)
+- Cement (component 1)(kg in a m^3 mixture)
+- Coarse Aggregate  (component 6)(kg in a m^3 mixture)
+- Fine Aggregate (component 7)(kg in a m^3 mixture)
+- ...
+
+2026-04-14 00:46:19 | WARNING  | app.routers.concrete | Concrete validation error: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- age
+- blast_furnace_slag
+- cement
+- coarse_aggregate
+- fine_aggregate
+- ...
+Feature names seen at fit time, yet now missing:
+- Age (day)
+- Blast Furnace Slag (component 2)(kg in a m^3 mixture)
+- Cement (component 1)(kg in a m^3 mixture)
+- Coarse Aggregate  (component 6)(kg in a m^3 mixture)
+- Fine Aggregate (component 7)(kg in a m^3 mixture)
+- ...
+
+2026-04-14 00:46:21 | INFO     | app.routers.steel | Steel prediction request received: {'c': 0.02, 'mn': 0.05, 'si': 0.05, 'cr': 0.01, 'ni': 19.7, 'mo': 2.95, 'v': 0.01, 'n': 0.0, 'nb': 0.01, 'co': 15.0, 'w': 0.0, 'al': 0.15, 'ti': 1.55}
+2026-04-14 00:46:21 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 00:46:23 | INFO     | app.routers.materials | Materials prediction request received: {'E': 207000.0, 'G': 79000.0, 'mu': 0.3, 'Ro': 7860.0}
+2026-04-14 00:46:23 | WARNING  | app.services.materials_service | Materials model not loaded — returning mock response
+2026-04-14 00:46:37 | INFO     | app.routers.concrete | Concrete prediction request received: {'cement': 540.0, 'blast_furnace_slag': 0.0, 'fly_ash': 0.0, 'water': 162.0, 'superplasticizer': 2.5, 'coarse_aggregate': 1040.0, 'fine_aggregate': 676.0, 'age': 28}
+2026-04-14 00:46:37 | ERROR    | app.services.concrete_service | Concrete prediction failed: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- age
+- blast_furnace_slag
+- cement
+- coarse_aggregate
+- fine_aggregate
+- ...
+Feature names seen at fit time, yet now missing:
+- Age (day)
+- Blast Furnace Slag (component 2)(kg in a m^3 mixture)
+- Cement (component 1)(kg in a m^3 mixture)
+- Coarse Aggregate  (component 6)(kg in a m^3 mixture)
+- Fine Aggregate (component 7)(kg in a m^3 mixture)
+- ...
+Traceback (most recent call last):
+  File "C:\Users\abhis\Downloads\MatMl-Spurtii\backend\app\services\concrete_service.py", line 36, in run_concrete_prediction
+    result = predict_concrete(model, scaler, input_data)
+  File "C:\Users\abhis\Downloads\MatMl-Spurtii\backend\app\ml\inference.py", line 65, in predict_concrete
+    X_scaled = scaler.transform(X)
+  File "C:\Users\abhis\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\_set_output.py", line 316, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+  File "C:\Users\abhis\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\preprocessing\_data.py", line 1094, in transform
+    X = validate_data(
+        self,
+    ...<6 lines>...
+        ensure_all_finite="allow-nan",
+    )
+  File "C:\Users\abhis\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\validation.py", line 2877, in validate_data
+    _check_feature_names(_estimator, X, reset=reset)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\abhis\AppData\Local\Programs\Python\Python314\Lib\site-packages\sklearn\utils\validation.py", line 2729, in _check_feature_names
+    raise ValueError(message)
+ValueError: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- age
+- blast_furnace_slag
+- cement
+- coarse_aggregate
+- fine_aggregate
+- ...
+Feature names seen at fit time, yet now missing:
+- Age (day)
+- Blast Furnace Slag (component 2)(kg in a m^3 mixture)
+- Cement (component 1)(kg in a m^3 mixture)
+- Coarse Aggregate  (component 6)(kg in a m^3 mixture)
+- Fine Aggregate (component 7)(kg in a m^3 mixture)
+- ...
+
+2026-04-14 00:46:37 | WARNING  | app.routers.concrete | Concrete validation error: The feature names should match those that were passed during fit.
+Feature names unseen at fit time:
+- age
+- blast_furnace_slag
+- cement
+- coarse_aggregate
+- fine_aggregate
+- ...
+Feature names seen at fit time, yet now missing:
+- Age (day)
+- Blast Furnace Slag (component 2)(kg in a m^3 mixture)
+- Cement (component 1)(kg in a m^3 mixture)
+- Coarse Aggregate  (component 6)(kg in a m^3 mixture)
+- Fine Aggregate (component 7)(kg in a m^3 mixture)
+- ...
+
+2026-04-14 00:48:04 | INFO     | app.main | MatML API shutting down.
+2026-04-14 00:48:06 | INFO     | app.main | MatML API starting up — loading ML models...
+2026-04-14 00:48:07 | INFO     | app.ml.loader | Loaded model artifact: concrete_best_model.pkl
+2026-04-14 00:48:07 | INFO     | app.ml.loader | Loaded model artifact: concrete_scaler.pkl
+2026-04-14 00:48:07 | INFO     | app.ml.loader | Loaded model artifact: steel_best_model.pkl
+2026-04-14 00:48:07 | INFO     | app.ml.loader | Loaded model artifact: steel_scaler.pkl
+2026-04-14 00:48:07 | ERROR    | app.ml.loader | Failed to load materials_reg_model.pkl: module 'sklearn._loss._loss' has no attribute '__pyx_unpickle_CyHalfSquaredError'
+2026-04-14 00:48:07 | INFO     | app.ml.loader | Loaded model artifact: materials_cls_model.pkl
+2026-04-14 00:48:07 | INFO     | app.ml.loader | Loaded model artifact: materials_scaler.pkl
+2026-04-14 00:48:07 | INFO     | app.ml.loader | Models ready: ['concrete_model', 'concrete_scaler', 'steel_model', 'steel_scaler', 'materials_cls_model', 'materials_scaler']
+2026-04-14 00:48:07 | WARNING  | app.ml.loader | Models in MOCK mode: ['materials_reg_model']
+2026-04-14 00:48:07 | INFO     | app.main | Startup complete. Live models: ['concrete_model', 'concrete_scaler', 'steel_model', 'steel_scaler', 'materials_cls_model', 'materials_scaler']
+2026-04-14 01:02:32 | INFO     | app.main | MatML API starting up — loading ML models...
+2026-04-14 01:02:34 | INFO     | app.ml.loader | Loaded model artifact: concrete_best_model.pkl
+2026-04-14 01:02:34 | INFO     | app.ml.loader | Loaded model artifact: concrete_scaler.pkl
+2026-04-14 01:02:34 | INFO     | app.ml.loader | Loaded model artifact: steel_best_model.pkl
+2026-04-14 01:02:34 | INFO     | app.ml.loader | Loaded model artifact: steel_scaler.pkl
+2026-04-14 01:02:34 | ERROR    | app.ml.loader | Failed to load materials_reg_model.pkl: module 'sklearn._loss._loss' has no attribute '__pyx_unpickle_CyHalfSquaredError'
+2026-04-14 01:02:34 | INFO     | app.ml.loader | Loaded model artifact: materials_cls_model.pkl
+2026-04-14 01:02:34 | INFO     | app.ml.loader | Loaded model artifact: materials_scaler.pkl
+2026-04-14 01:02:34 | INFO     | app.ml.loader | Models ready: ['concrete_model', 'concrete_scaler', 'steel_model', 'steel_scaler', 'materials_cls_model', 'materials_scaler']
+2026-04-14 01:02:34 | WARNING  | app.ml.loader | Models in MOCK mode: ['materials_reg_model']
+2026-04-14 01:02:34 | INFO     | app.main | Startup complete. Live models: ['concrete_model', 'concrete_scaler', 'steel_model', 'steel_scaler', 'materials_cls_model', 'materials_scaler']
+2026-04-14 01:02:53 | INFO     | app.routers.concrete | Concrete prediction request received: {'cement': 350.0, 'blast_furnace_slag': 0.0, 'fly_ash': 0.0, 'water': 185.0, 'superplasticizer': 6.0, 'coarse_aggregate': 1000.0, 'fine_aggregate': 750.0, 'age': 28}
+2026-04-14 01:02:53 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 01:03:06 | INFO     | app.routers.concrete | Concrete prediction request received: {'cement': 350.0, 'blast_furnace_slag': 0.0, 'fly_ash': 0.0, 'water': 185.0, 'superplasticizer': 10.0, 'coarse_aggregate': 1000.0, 'fine_aggregate': 750.0, 'age': 28}
+2026-04-14 01:03:06 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 01:03:11 | INFO     | app.routers.concrete | Concrete prediction request received: {'cement': 350.0, 'blast_furnace_slag': 33.0, 'fly_ash': 0.0, 'water': 185.0, 'superplasticizer': 10.0, 'coarse_aggregate': 1000.0, 'fine_aggregate': 750.0, 'age': 28}
+2026-04-14 01:03:11 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 01:03:13 | INFO     | app.routers.concrete | Concrete prediction request received: {'cement': 350.0, 'blast_furnace_slag': 33.0, 'fly_ash': 0.0, 'water': 185.0, 'superplasticizer': 10.0, 'coarse_aggregate': 1000.0, 'fine_aggregate': 750.0, 'age': 28}
+2026-04-14 01:03:13 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 01:03:14 | INFO     | app.routers.concrete | Concrete prediction request received: {'cement': 350.0, 'blast_furnace_slag': 33.0, 'fly_ash': 0.0, 'water': 185.0, 'superplasticizer': 10.0, 'coarse_aggregate': 1000.0, 'fine_aggregate': 750.0, 'age': 28}
+2026-04-14 01:03:14 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 01:03:14 | INFO     | app.routers.concrete | Concrete prediction request received: {'cement': 350.0, 'blast_furnace_slag': 33.0, 'fly_ash': 0.0, 'water': 185.0, 'superplasticizer': 10.0, 'coarse_aggregate': 1000.0, 'fine_aggregate': 750.0, 'age': 28}
+2026-04-14 01:03:14 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 01:03:15 | INFO     | app.routers.concrete | Concrete prediction request received: {'cement': 350.0, 'blast_furnace_slag': 33.0, 'fly_ash': 0.0, 'water': 185.0, 'superplasticizer': 10.0, 'coarse_aggregate': 1000.0, 'fine_aggregate': 750.0, 'age': 28}
+2026-04-14 01:03:15 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 01:03:40 | INFO     | app.routers.steel | Steel prediction request received: {'c': 0.1, 'mn': 0.5, 'si': 0.3, 'cr': 0.5, 'ni': 0.6, 'mo': 0.2, 'v': 0.01, 'n': 0.01, 'nb': 0.01, 'co': 0.01, 'w': 0.01, 'al': 0.01, 'ti': 0.01}
+2026-04-14 01:03:40 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 01:03:46 | INFO     | app.routers.steel | Steel prediction request received: {'c': 0.1, 'mn': 0.5, 'si': 0.3, 'cr': 0.5, 'ni': 0.6, 'mo': 0.2, 'v': 0.01, 'n': 0.08, 'nb': 0.01, 'co': 0.01, 'w': 0.01, 'al': 0.01, 'ti': 0.01}
+2026-04-14 01:03:46 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 01:03:57 | INFO     | app.routers.steel | Steel prediction request received: {'c': 0.1, 'mn': 0.5, 'si': 0.3, 'cr': 0.5, 'ni': 0.6, 'mo': 0.2, 'v': 0.02, 'n': 0.08, 'nb': 0.014, 'co': 0.01, 'w': 0.01, 'al': 0.08, 'ti': 0.01}
+2026-04-14 01:03:58 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 01:04:03 | INFO     | app.routers.materials | Materials prediction request received: {'E': 200000.0, 'G': 77000.0, 'mu': 0.3, 'Ro': 7800.0}
+2026-04-14 01:04:03 | WARNING  | app.services.materials_service | Materials model not loaded — returning mock response
+2026-04-14 01:04:14 | INFO     | app.routers.steel | Steel prediction request received: {'c': 0.1, 'mn': 0.5, 'si': 0.3, 'cr': 0.5, 'ni': 0.6, 'mo': 0.2, 'v': 0.02, 'n': 0.08, 'nb': 0.014, 'co': 0.01, 'w': 0.01, 'al': 0.08, 'ti': 0.01}
+2026-04-14 01:04:14 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-14 01:05:30 | INFO     | app.routers.materials | Materials prediction request received: {'E': 200000.0, 'G': 77000.0, 'mu': 0.3, 'Ro': 7800.0}
+2026-04-14 01:05:30 | WARNING  | app.services.materials_service | Materials model not loaded — returning mock response
+2026-04-15 19:32:50 | INFO     | app.main | MatML API starting up — loading ML models...
+2026-04-15 19:32:56 | INFO     | app.ml.loader | Loaded model artifact: concrete_best_model.pkl
+2026-04-15 19:32:56 | INFO     | app.ml.loader | Loaded model artifact: concrete_scaler.pkl
+2026-04-15 19:32:57 | INFO     | app.ml.loader | Loaded model artifact: steel_best_model.pkl
+2026-04-15 19:32:57 | INFO     | app.ml.loader | Loaded model artifact: steel_scaler.pkl
+2026-04-15 19:32:58 | INFO     | app.ml.loader | Loaded model artifact: materials_reg_model.pkl
+2026-04-15 19:32:58 | INFO     | app.ml.loader | Loaded model artifact: materials_cls_model.pkl
+2026-04-15 19:32:58 | INFO     | app.ml.loader | Loaded model artifact: materials_scaler.pkl
+2026-04-15 19:32:58 | INFO     | app.ml.loader | Models ready: ['concrete_model', 'concrete_scaler', 'steel_model', 'steel_scaler', 'materials_reg_model', 'materials_cls_model', 'materials_scaler']
+2026-04-15 19:32:58 | INFO     | app.main | Startup complete. Live models: ['concrete_model', 'concrete_scaler', 'steel_model', 'steel_scaler', 'materials_reg_model', 'materials_cls_model', 'materials_scaler']
+2026-04-15 19:33:54 | INFO     | app.routers.structural | Structural analysis request: {'shape': 'square_footing', 'material_type': 'concrete', 'length': 6.0, 'width': 0.3, 'depth': 0.5, 'axial_load_kn': 0.0, 'bending_moment_knm': 120.0, 'shear_force_kn': 80.0, 'inclination_deg': 0.0, 'exposure_class': 'severe'}
+2026-04-15 19:33:58 | INFO     | app.routers.structural | Structural analysis request: {'shape': 'square_footing', 'material_type': 'concrete', 'length': 6.0, 'width': 0.3, 'depth': 0.5, 'axial_load_kn': 0.0, 'bending_moment_knm': 120.0, 'shear_force_kn': 80.0, 'inclination_deg': 0.0, 'exposure_class': 'moderate'}
+2026-04-15 19:34:01 | INFO     | app.routers.structural | Structural analysis request: {'shape': 'square_footing', 'material_type': 'concrete', 'length': 6.0, 'width': 0.3, 'depth': 0.5, 'axial_load_kn': 0.0, 'bending_moment_knm': 120.0, 'shear_force_kn': 80.0, 'inclination_deg': 0.0, 'exposure_class': 'mild'}
+2026-04-15 19:34:31 | INFO     | app.routers.cost | Cost calculation request: {'material_type': 'concrete', 'volume_m3': 10.0, 'cement': 350.0, 'blast_furnace_slag': 0.0, 'fly_ash': 0.0, 'water': 185.0, 'superplasticizer': 6.0, 'coarse_aggregate': 1000.0, 'fine_aggregate': 750.0, 'c': 0.1, 'mn': 0.5, 'si': 0.3, 'cr': 0.5, 'ni': 0.1, 'mo': 0.2, 'v': 0.01, 'n': 0.01, 'nb': 0.01, 'co': 0.01, 'w': 0.01, 'al': 0.01, 'ti': 0.01, 'Ro': 7800.0}
+2026-04-15 19:35:34 | INFO     | app.routers.concrete | Concrete prediction request received: {'cement': 350.0, 'blast_furnace_slag': 0.0, 'fly_ash': 0.0, 'water': 185.0, 'superplasticizer': 6.0, 'coarse_aggregate': 1000.0, 'fine_aggregate': 750.0, 'age': 28}
+2026-04-15 19:35:34 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-15 19:35:40 | INFO     | app.routers.steel | Steel prediction request received: {'c': 0.1, 'mn': 0.5, 'si': 0.3, 'cr': 0.5, 'ni': 0.1, 'mo': 0.2, 'v': 0.01, 'n': 0.01, 'nb': 0.01, 'co': 0.01, 'w': 0.01, 'al': 0.01, 'ti': 0.01}
+2026-04-15 19:35:40 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-15 19:35:47 | INFO     | app.routers.materials | Materials prediction request received: {'E': 200000.0, 'G': 77000.0, 'mu': 0.3, 'Ro': 7800.0}
+2026-04-15 19:35:47 | WARNING  | app.ml.inference | SHAP computation failed: No module named 'shap'
+2026-04-15 19:37:35 | INFO     | app.routers.cost | Cost calculation request: {'material_type': 'concrete', 'volume_m3': 10.0, 'cement': 350.0, 'blast_furnace_slag': 0.0, 'fly_ash': 0.0, 'water': 185.0, 'superplasticizer': 6.0, 'coarse_aggregate': 1000.0, 'fine_aggregate': 750.0, 'c': 0.1, 'mn': 0.5, 'si': 0.3, 'cr': 0.5, 'ni': 0.1, 'mo': 0.2, 'v': 0.01, 'n': 0.01, 'nb': 0.01, 'co': 0.01, 'w': 0.01, 'al': 0.01, 'ti': 0.01, 'Ro': 7800.0}
+2026-04-15 19:37:45 | INFO     | app.routers.structural | Structural analysis request: {'shape': 'square_footing', 'material_type': 'concrete', 'length': 6.0, 'width': 0.3, 'depth': 0.5, 'axial_load_kn': 0.0, 'bending_moment_knm': 120.0, 'shear_force_kn': 80.0, 'inclination_deg': 0.0, 'exposure_class': 'mild'}
+2026-04-25 10:47:16 | INFO     | app.main | MatML API starting up — loading ML models...
+2026-04-25 10:47:20 | INFO     | app.ml.loader | Loaded model artifact: concrete_best_model.pkl
+2026-04-25 10:47:20 | INFO     | app.ml.loader | Loaded model artifact: concrete_scaler.pkl
+2026-04-25 10:47:21 | ERROR    | app.ml.loader | Failed to load steel_best_model.pkl: node array from the pickle has an incompatible dtype:
+- expected: [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+- got     : {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+2026-04-25 10:47:21 | INFO     | app.ml.loader | Loaded model artifact: steel_scaler.pkl
+2026-04-25 10:47:21 | ERROR    | app.ml.loader | Failed to load materials_reg_model.pkl: node array from the pickle has an incompatible dtype:
+- expected: [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+- got     : {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+2026-04-25 10:47:21 | ERROR    | app.ml.loader | Failed to load materials_cls_model.pkl: node array from the pickle has an incompatible dtype:
+- expected: [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+- got     : {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+2026-04-25 10:47:21 | INFO     | app.ml.loader | Loaded model artifact: materials_scaler.pkl
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Missing model file: enhanced_steel_mech_model.pkl — running in MOCK mode for 'enhanced_mech_model'
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Missing model file: enhanced_steel_mech_scaler.pkl — running in MOCK mode for 'enhanced_mech_scaler'
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Missing model file: enhanced_steel_thermal_model.pkl — running in MOCK mode for 'enhanced_thermal_model'
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Missing model file: enhanced_steel_thermal_scaler.pkl — running in MOCK mode for 'enhanced_thermal_scaler'
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Missing model file: enhanced_steel_strength_model.pkl — running in MOCK mode for 'enhanced_strength_model'
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Missing model file: enhanced_steel_strength_scaler.pkl — running in MOCK mode for 'enhanced_strength_scaler'
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Missing model file: enhanced_steel_repair_model.pkl — running in MOCK mode for 'enhanced_repair_model'
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Missing model file: enhanced_steel_degrade_model.pkl — running in MOCK mode for 'enhanced_degrade_model'
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Missing model file: enhanced_steel_use_model.pkl — running in MOCK mode for 'enhanced_use_model'
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Missing model file: enhanced_steel_weld_model.pkl — running in MOCK mode for 'enhanced_weld_model'
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Missing model file: enhanced_steel_weld_scaler.pkl — running in MOCK mode for 'enhanced_weld_scaler'
+2026-04-25 10:47:21 | INFO     | app.ml.loader | Models ready: ['concrete_model', 'concrete_scaler', 'steel_scaler', 'materials_scaler']
+2026-04-25 10:47:21 | WARNING  | app.ml.loader | Models in MOCK mode: ['steel_model', 'materials_reg_model', 'materials_cls_model', 'enhanced_mech_model', 'enhanced_mech_scaler', 'enhanced_thermal_model', 'enhanced_thermal_scaler', 'enhanced_strength_model', 'enhanced_strength_scaler', 'enhanced_repair_model', 'enhanced_degrade_model', 'enhanced_use_model', 'enhanced_weld_model', 'enhanced_weld_scaler']
+2026-04-25 10:47:21 | INFO     | app.main | Startup complete. Live models: ['concrete_model', 'concrete_scaler', 'steel_scaler', 'materials_scaler']
+2026-04-25 10:50:05 | INFO     | app.main | MatML API starting up — loading ML models...
+2026-04-25 10:50:09 | INFO     | app.ml.loader | Loaded model artifact: concrete_best_model.pkl
+2026-04-25 10:50:09 | INFO     | app.ml.loader | Loaded model artifact: concrete_scaler.pkl
+2026-04-25 10:50:09 | ERROR    | app.ml.loader | Failed to load steel_best_model.pkl: node array from the pickle has an incompatible dtype:
+- expected: [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+- got     : {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+2026-04-25 10:50:09 | INFO     | app.ml.loader | Loaded model artifact: steel_scaler.pkl
+2026-04-25 10:50:09 | ERROR    | app.ml.loader | Failed to load materials_reg_model.pkl: node array from the pickle has an incompatible dtype:
+- expected: [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+- got     : {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+2026-04-25 10:50:09 | ERROR    | app.ml.loader | Failed to load materials_cls_model.pkl: node array from the pickle has an incompatible dtype:
+- expected: [('left_child', '<i8'), ('right_child', '<i8'), ('feature', '<i8'), ('threshold', '<f8'), ('impurity', '<f8'), ('n_node_samples', '<i8'), ('weighted_n_node_samples', '<f8')]
+- got     : {'names': ['left_child', 'right_child', 'feature', 'threshold', 'impurity', 'n_node_samples', 'weighted_n_node_samples', 'missing_go_to_left'], 'formats': ['<i8', '<i8', '<i8', '<f8', '<f8', '<i8', '<f8', 'u1'], 'offsets': [0, 8, 16, 24, 32, 40, 48, 56], 'itemsize': 64}
+2026-04-25 10:50:09 | INFO     | app.ml.loader | Loaded model artifact: materials_scaler.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Loaded model artifact: enhanced_steel_mech_model.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Loaded model artifact: enhanced_steel_mech_scaler.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Loaded model artifact: enhanced_steel_thermal_model.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Loaded model artifact: enhanced_steel_thermal_scaler.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Loaded model artifact: enhanced_steel_strength_model.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Loaded model artifact: enhanced_steel_strength_scaler.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Loaded model artifact: enhanced_steel_repair_model.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Loaded model artifact: enhanced_steel_degrade_model.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Loaded model artifact: enhanced_steel_use_model.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Loaded model artifact: enhanced_steel_weld_model.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Loaded model artifact: enhanced_steel_weld_scaler.pkl
+2026-04-25 10:50:10 | INFO     | app.ml.loader | Models ready: ['concrete_model', 'concrete_scaler', 'steel_scaler', 'materials_scaler', 'enhanced_mech_model', 'enhanced_mech_scaler', 'enhanced_thermal_model', 'enhanced_thermal_scaler', 'enhanced_strength_model', 'enhanced_strength_scaler', 'enhanced_repair_model', 'enhanced_degrade_model', 'enhanced_use_model', 'enhanced_weld_model', 'enhanced_weld_scaler']
+2026-04-25 10:50:10 | WARNING  | app.ml.loader | Models in MOCK mode: ['steel_model', 'materials_reg_model', 'materials_cls_model']
+2026-04-25 10:50:10 | INFO     | app.main | Startup complete. Live models: ['concrete_model', 'concrete_scaler', 'steel_scaler', 'materials_scaler', 'enhanced_mech_model', 'enhanced_mech_scaler', 'enhanced_thermal_model', 'enhanced_thermal_scaler', 'enhanced_strength_model', 'enhanced_strength_scaler', 'enhanced_repair_model', 'enhanced_degrade_model', 'enhanced_use_model', 'enhanced_weld_model', 'enhanced_weld_scaler']

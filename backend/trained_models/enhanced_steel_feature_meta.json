@@ -1,0 +1,167 @@
+{
+  "version": "2.0",
+  "description": "Enhanced Steel Module — six-module prediction engine. Input: 13 elemental composition features (wt%). Output: elastic, thermal, strength, repair, degradation, suitability.",
+  "input_features": [
+    "c",
+    "mn",
+    "si",
+    "cr",
+    "ni",
+    "mo",
+    "v",
+    "n",
+    "nb",
+    "co",
+    "w",
+    "al",
+    "ti"
+  ],
+  "feature_units": {
+    "c": "wt%",
+    "mn": "wt%",
+    "si": "wt%",
+    "cr": "wt%",
+    "ni": "wt%",
+    "mo": "wt%",
+    "v": "wt%",
+    "n": "wt%",
+    "nb": "wt%",
+    "co": "wt%",
+    "w": "wt%",
+    "al": "wt%",
+    "ti": "wt%"
+  },
+  "targets": {
+    "mechanical": [
+      "E",
+      "G",
+      "mu"
+    ],
+    "thermal": [
+      "thermal_conductivity",
+      "critical_temperature",
+      "Ro"
+    ],
+    "strength": [
+      "su",
+      "sy",
+      "elongation"
+    ],
+    "repair": [
+      "su_post_repair",
+      "sy_post_repair"
+    ],
+    "degrade": [
+      "lifespan_index"
+    ],
+    "use": [
+      "use",
+      "weldability_class"
+    ]
+  },
+  "target_units": {
+    "E": "MPa",
+    "G": "MPa",
+    "mu": "—",
+    "thermal_conductivity": "W/m·K",
+    "critical_temperature": "°C",
+    "Ro": "kg/m³",
+    "su": "MPa",
+    "sy": "MPa",
+    "elongation": "%",
+    "su_post_repair": "MPa",
+    "sy_post_repair": "MPa",
+    "lifespan_index": "0–1 (higher = longer service life)",
+    "use": "0=not recommended, 1=recommended",
+    "weldability_class": "0=Class III (poor), 1=Class II (acceptable), 2=Class I (excellent)"
+  },
+  "scalers": {
+    "mech": "enhanced_steel_mech_scaler.pkl",
+    "thermal": "enhanced_steel_thermal_scaler.pkl",
+    "strength": "enhanced_steel_strength_scaler.pkl",
+    "repair": "enhanced_steel_strength_scaler.pkl",
+    "degrade": "enhanced_steel_strength_scaler.pkl",
+    "use": "enhanced_steel_strength_scaler.pkl",
+    "weld": "enhanced_steel_weld_scaler.pkl"
+  },
+  "metrics": {
+    "mech": {
+      "r2": 0.7624
+    },
+    "thermal": {
+      "r2": 0.9971
+    },
+    "strength": {
+      "r2": 0.6143
+    },
+    "repair": {
+      "r2": 0.5836
+    },
+    "degrade": {
+      "r2": 0.9995
+    },
+    "use": {
+      "accuracy": 0.9517
+    },
+    "weld_class": {
+      "accuracy": 1.0
+    }
+  },
+  "document_targets": {
+    "MECH": {
+      "r2": 0.88
+    },
+    "THERMAL": {
+      "r2": 0.85
+    },
+    "STRENGTH": {
+      "r2": 0.9
+    },
+    "REPAIR": {
+      "r2": 0.87
+    },
+    "DEGRADE": {
+      "r2": 0.84
+    },
+    "USE": {
+      "accuracy": 0.9
+    }
+  },
+  "application_lifespan_table": {
+    "structural": {
+      "base_years": 50,
+      "max_repairs": 8,
+      "standard": "BS EN 1993"
+    },
+    "bridge": {
+      "base_years": 40,
+      "max_repairs": 6,
+      "standard": "BS 5400"
+    },
+    "pressure_vessel": {
+      "base_years": 30,
+      "max_repairs": 4,
+      "standard": "ASME VIII"
+    },
+    "pipeline": {
+      "base_years": 35,
+      "max_repairs": 5,
+      "standard": "ASME B31.3"
+    },
+    "offshore": {
+      "base_years": 25,
+      "max_repairs": 4,
+      "standard": "DNV-OS-C101"
+    },
+    "rotating_machinery": {
+      "base_years": 20,
+      "max_repairs": 3,
+      "standard": "ISO 9283"
+    }
+  },
+  "weldability_classes": {
+    "0": "Class III — poor weldability (CE ≥ 0.45); mandatory preheat required",
+    "1": "Class II  — acceptable weldability (0.35 ≤ CE < 0.45); limited preheat",
+    "2": "Class I   — excellent weldability (CE < 0.35); no preheat needed"
+  }
+}

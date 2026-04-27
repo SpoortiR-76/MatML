@@ -1,0 +1,16 @@
+# Place trained .pkl files here after running training scripts:
+#
+#   concrete_best_model.pkl
+#   concrete_scaler.pkl
+#   steel_best_model.pkl
+#   steel_scaler.pkl
+#   materials_reg_model.pkl
+#   materials_cls_model.pkl
+#   materials_scaler.pkl
+#
+# Run from training/:
+#   python train_concrete.py
+#   python train_steel.py
+#   python train_materials.py
+#
+# Each script saves its .pkl files directly into this directory.

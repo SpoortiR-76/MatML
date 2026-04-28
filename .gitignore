@@ -51,3 +51,4 @@ Thumbs.db
 
 # Local temp extraction artifacts
 .tmp_plan/
+tools/

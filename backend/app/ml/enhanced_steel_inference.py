@@ -213,12 +213,10 @@ def predict_use(
 
 # ── Deterministic recommendation engine (§10 rule 11) ───────────────────────
 APPLICATION_TABLE = {
-    "structural":         {"base_years": 50, "max_repairs": 8,  "standard": "BS EN 1993"},
-    "bridge":             {"base_years": 40, "max_repairs": 6,  "standard": "BS 5400"},
-    "pressure_vessel":    {"base_years": 30, "max_repairs": 4,  "standard": "ASME VIII"},
-    "pipeline":           {"base_years": 35, "max_repairs": 5,  "standard": "ASME B31.3"},
-    "offshore":           {"base_years": 25, "max_repairs": 4,  "standard": "DNV-OS-C101"},
-    "rotating_machinery": {"base_years": 20, "max_repairs": 3,  "standard": "ISO 9283"},
+    "structural":  {"base_years": 50, "max_repairs": 8, "standard": "BS EN 1993"},
+    "bridge":      {"base_years": 40, "max_repairs": 6, "standard": "BS 5400"},
+    "residential": {"base_years": 60, "max_repairs": 5, "standard": "BS EN 1992"},
+    "commercial":  {"base_years": 55, "max_repairs": 6, "standard": "BS EN 1993-1"},
 }
 
 # Nearest grade lookup by CE + Cr content

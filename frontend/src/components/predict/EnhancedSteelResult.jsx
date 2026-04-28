@@ -175,7 +175,15 @@ export default function EnhancedSteelResult({ data }) {
           <ResultCard label="Cycles to Threshold" value={degradation?.cycles_to_threshold}
             accent={degradation?.cycles_to_threshold >= 6 ? '#10b981' : '#f59e0b'} />
         </div>
-        <div className="mt-4">
+
+        {/* Repair Curve Chart — prominent panel */}
+        <div className="mt-5 rounded-2xl p-5" style={{ background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.15)' }}>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-base">📉</span>
+            <p className="text-sm font-semibold" style={{ color: '#6ee7b7', fontFamily: 'Syne, sans-serif' }}>
+              Repair Cycle Degradation Chart (0–10 Cycles)
+            </p>
+          </div>
           <RepairCurveChart initialResult={data} />
         </div>
       </div>

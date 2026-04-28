@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 
 from app.config import settings
 from app.ml.loader import load_all_models
-from app.routers import concrete, enhanced_steel, materials, steel, structural, cost
+from app.routers import concrete, enhanced_steel, materials, steel, structural
 from app.utils.logger import setup_logging
 
 # ── Logging must be configured before anything else ────────────────────────
@@ -59,7 +59,7 @@ app.include_router(steel.router,          prefix="/api/predict", tags=["Steel"])
 app.include_router(enhanced_steel.router, prefix="/api/predict", tags=["Enhanced Steel"])
 app.include_router(materials.router,      prefix="/api/predict", tags=["Materials"])
 app.include_router(structural.router,     prefix="/api/predict", tags=["Structural"])
-app.include_router(cost.router,           prefix="/api/predict", tags=["Cost"])
+
 
 
 # ── Health check ───────────────────────────────────────────────────────────

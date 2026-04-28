@@ -228,13 +228,13 @@ def augment_steel(df: pd.DataFrame) -> pd.DataFrame:
     # We pre-compute residual_ratio columns for n = 1..10. These give Module E
     # a rich multi-target or single-target training signal.
     # We use the average ratio across cycles as a compact lifespan_index (0–1).
-    ratios = []
+    ratio_scalars = []
     for n in range(1, 11):
-        ratio_n = np.exp(-DECAY_K * n)
-        ratio_n = ratio_n.clip(0.05, 1.0)
+        ratio_n = float(np.exp(-DECAY_K * n))
+        ratio_n = max(0.05, min(1.0, ratio_n))
         d[f"residual_ratio_n{n}"] = ratio_n
-        ratios.append(ratio_n)
-    d["lifespan_index"] = pd.concat(ratios, axis=1).mean(axis=1).clip(0.1, 1.0)
+        ratio_scalars.append(ratio_n)
+    d["lifespan_index"] = float(np.clip(np.mean(ratio_scalars), 0.1, 1.0))
 
     # ── Use suitability (CE-based, §10 rule 11) ─────────────────────────────
     # CE < 0.45 → structurally suitable (match Class I + II)

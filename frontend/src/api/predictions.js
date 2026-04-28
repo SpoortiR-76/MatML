@@ -30,14 +30,6 @@ export async function predictStructural(formData) {
   return handleResponse(res)
 }
 
-export async function predictCost(formData) {
-  const res = await fetch(`${BASE}/api/predict/cost`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(formData),
-  })
-  return handleResponse(res)
-}
-
 export async function checkHealth() {
   const res = await fetch(`${BASE}/api/health`)
   return handleResponse(res)

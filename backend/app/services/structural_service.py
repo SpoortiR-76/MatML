@@ -93,22 +93,21 @@ def _design_strength(mat: str, required_mpa: float, exposure: str) -> float:
     return round(required_mpa * sf * factor, 1)
 
 
-def _design_notes(shape, mat, slenderness, sf, design_ok, inclination_deg, exposure):
+def _design_notes(shape, mat, slenderness, sf, design_status, inclination_deg, exposure):
     notes = []
-    if not design_ok:
-        notes.append("Warning: Combined stress exceeds capacity -- increase section size or use higher-grade material.")
+    if design_status == "Unsafe":
+        notes.append("⚠ Warning: Combined stress exceeds capacity -- increase section size or use higher-grade material.")
+    elif design_status == "Caution":
+        notes.append("⚠ Info: Safety factor is marginal. Proceed with detailed manual verification.")
+    
     if slenderness > 120 and shape in ("circular_column", "rectangular_beam"):
-        notes.append("Warning: High slenderness ratio -- check buckling using Euler's formula.")
+        notes.append("⚠ Warning: High slenderness ratio -- check buckling using Euler's formula.")
     if inclination_deg > 30:
         notes.append(f"Info: Member inclined at {inclination_deg} degrees; resolve loads along and perpendicular to axis.")
-    if exposure in ("severe", "very_severe") and mat == "steel":
-        notes.append("Info: Severe exposure -- use stainless or galvanised steel (see enhanced steel recommendation).")
-    if mat == "concrete" and shape == "rectangular_slab":
-        notes.append("Info: Slab -- check deflection (L/250) and provide minimum 0.12pct temperature reinforcement.")
     if sf > 3.0:
         notes.append("Info: Very high safety factor -- section is over-designed; consider optimising dimensions.")
     if not notes:
-        notes.append("OK: Section satisfies all basic design checks.")
+        notes.append("✓ OK: Section satisfies all basic design checks for construction use.")
     return notes
 
 
@@ -117,7 +116,7 @@ def _run_steel_recommendation(
     required_mpa: float,
     exposure: str,
     application: str,
-    concrete_fck_mpa: float,
+    safe_strength_baseline: float,
 ) -> dict | None:
     """
     Pick the best-fit steel composition for the computed stress demand,
@@ -134,9 +133,8 @@ def _run_steel_recommendation(
         comp["mn"] = min(3.0,  comp["mn"] * scale)
         comp["cr"] = min(25.0, comp["cr"] * scale)
 
-        # Concrete fck context: if high grade concrete, need higher yield steel
-        target_sy = concrete_fck_mpa * 6.0
-        if target_sy > 350:
+        # Baseline override if ML prediction existed
+        if safe_strength_baseline > 350:
             comp["c"]  = min(2.0,  comp["c"]  + 0.03)
             comp["mn"] = min(3.0,  comp["mn"] + 0.20)
             comp["cr"] = min(25.0, comp["cr"] + 0.30)
@@ -149,18 +147,8 @@ def _run_steel_recommendation(
         return {
             "grade_name":               result["recommendation"]["grade_name"],
             "estimated_lifespan_years": result["recommendation"]["estimated_lifespan_years"],
-            "remaining_repairs":        result["recommendation"]["remaining_repairs"],
-            "max_repair_cycles":        result["recommendation"]["max_repair_cycles"],
-            "standard_reference":       result["recommendation"]["standard_reference"],
             "weldability_class":        result["suitability"]["weldability_class"],
-            "carbon_equivalent":        result["suitability"]["carbon_equivalent"],
             "verdict":                  result["recommendation"]["verdict"],
-            "mechanical":               result["mechanical"],
-            "thermal":                  result["thermal"],
-            "strength":                 result["strength"],
-            "repair":                   result["repair"],
-            "degradation":              result["degradation"],
-            "recommended_composition":  comp,
         }
     except Exception as exc:
         logger.warning("Enhanced steel recommendation failed in structural service: %s", exc)
@@ -177,9 +165,11 @@ def run_structural_analysis(input_data: dict, models: dict = None) -> dict:
     M_knm     = input_data["bending_moment_knm"]
     V_kn      = input_data["shear_force_kn"]
     theta_deg = input_data.get("inclination_deg", 0.0)
-    exposure  = input_data["exposure_class"]
-    fck       = input_data.get("concrete_fck_mpa", 30.0)
-    steel_app = input_data.get("steel_application", "structural")
+    exposure          = input_data["exposure_class"]
+    construction_type = input_data.get("construction_type", "commercial")
+
+    predicted_fck = input_data.get("predicted_concrete_fck_mpa") or 30.0
+    predicted_sy  = input_data.get("predicted_steel_sy_mpa") or 400.0
 
     P = P_kn  * 1e3
     M = M_knm * 1e3
@@ -197,10 +187,17 @@ def run_structural_analysis(input_data: dict, models: dict = None) -> dict:
     sigma_combined = round(math.sqrt((sigma_axial + sigma_bend)**2 + 3 * tau_shear**2), 3)
 
     required_mpa = _design_strength(mat, sigma_combined, exposure)
-    sf           = round(required_mpa / sigma_combined, 2) if sigma_combined > 0 else 999.0
-    design_ok    = sf >= SF_TARGET.get(mat, 1.5)
+    sf           = round(required_mpa / max(sigma_combined, 1.0), 2)
+    
+    target_sf = SF_TARGET.get(mat, 1.5)
+    if sf >= target_sf:
+        design_status = "Safe"
+    elif sf >= target_sf * 0.8:
+        design_status = "Caution"
+    else:
+        design_status = "Unsafe"
 
-    notes = _design_notes(shape, mat, slenderness, sf, design_ok, theta_deg, exposure)
+    notes = _design_notes(shape, mat, slenderness, sf, design_status, theta_deg, exposure)
 
     shap_values = {
         "axial_load":          round(sigma_axial / max(sigma_combined, 1e-9), 4),
@@ -216,7 +213,9 @@ def run_structural_analysis(input_data: dict, models: dict = None) -> dict:
     service_life = SERVICE_LIFE[mat][exposure]
 
     if mat == "steel":
-        steel_rec = _run_steel_recommendation(models or {}, required_mpa, exposure, steel_app, fck)
+        # Convert construction_type 'residential'/'commercial' to structural, 'bridge' to bridge.
+        app_type = "bridge" if construction_type == "bridge" else "structural"
+        steel_rec = _run_steel_recommendation(models or {}, required_mpa, exposure, app_type, predicted_sy)
         if steel_rec:
             service_life = int(steel_rec.get("estimated_lifespan_years", service_life))
     else:
@@ -242,7 +241,7 @@ def run_structural_analysis(input_data: dict, models: dict = None) -> dict:
         "combined_stress_mpa":         sigma_combined,
         "required_strength_mpa":       required_mpa,
         "safety_factor":               sf,
-        "design_ok":                   design_ok,
+        "design_status":               design_status,
         "recommended_composition":     rec_comp,
         "estimated_service_life_years":service_life,
         "design_notes":                notes,

@@ -19,33 +19,24 @@ const defaultFormData = {
     length: 6.0, width: 0.3, depth: 0.5,
     axial_load_kn: 0, bending_moment_knm: 120, shear_force_kn: 80,
     inclination_deg: 0, exposure_class: 'moderate',
-    // concrete strength context used when steel is selected
-    concrete_fck_mpa: 30,
-  },
-  cost: {
-    material_type: 'concrete',
-    volume_m3: 10,
-    cement: 350, blast_furnace_slag: 0, fly_ash: 0,
-    water: 185, superplasticizer: 6,
-    coarse_aggregate: 1000, fine_aggregate: 750,
-    c: 0.1, mn: 0.5, si: 0.3, cr: 0.5, ni: 0.1,
-    mo: 0.2, v: 0.01, n: 0.01, nb: 0.01, co: 0.01,
-    w: 0.01, al: 0.01, ti: 0.01,
-    Ro: 7800,
+    construction_type: 'commercial',
   },
 }
 
 export const usePredictionStore = create((set) => ({
   activeTab: 'concrete',
   isLoading: false,
-  result: null,
+  results: { concrete: null, enhanced_steel: null, structural: null },
   error: null,
   formData: defaultFormData,
 
-  setActiveTab: (tab) => set({ activeTab: tab, result: null, error: null }),
+  setActiveTab: (tab) => set({ activeTab: tab, error: null }),
   setLoading: (isLoading) => set({ isLoading }),
-  setResult: (result) => set({ result, error: null }),
-  setError: (error) => set({ error, result: null }),
+  setResult: (tab, data) => set((state) => ({
+    results: { ...state.results, [tab]: data },
+    error: null,
+  })),
+  setError: (error) => set({ error }),
   updateFormData: (tab, field, value) =>
     set((state) => ({
       formData: {
@@ -53,5 +44,5 @@ export const usePredictionStore = create((set) => ({
         [tab]: { ...state.formData[tab], [field]: value },
       },
     })),
-  resetResult: () => set({ result: null, error: null }),
+  resetResult: () => set({ results: { concrete: null, enhanced_steel: null, structural: null }, error: null }),
 }))

@@ -2,12 +2,10 @@ import { usePredictionStore } from '../../store/predictionStore'
 import InputField from '../ui/InputField'
 
 const APPLICATIONS = [
-  { value: 'structural',        label: 'Structural',         icon: '🏗️', desc: 'Buildings / frames' },
-  { value: 'bridge',            label: 'Bridge',             icon: '🌉', desc: 'Civil infrastructure' },
-  { value: 'pressure_vessel',   label: 'Pressure Vessel',    icon: '⚗️', desc: 'ASME VIII' },
-  { value: 'pipeline',          label: 'Pipeline',           icon: '🔩', desc: 'Onshore fluid transport' },
-  { value: 'offshore',          label: 'Offshore Platform',  icon: '🌊', desc: 'Marine / subsea' },
-  { value: 'rotating_machinery',label: 'Rotating Machinery', icon: '⚙️', desc: 'ISO 9283' },
+  { value: 'structural',   label: 'Structural',   icon: '🏗️', desc: 'General frames & columns (BS EN 1993)' },
+  { value: 'bridge',       label: 'Bridge',       icon: '🌉', desc: 'Civil / highway bridges (BS 5400)' },
+  { value: 'residential',  label: 'Residential',  icon: '🏠', desc: 'Low-rise residential buildings' },
+  { value: 'commercial',   label: 'Commercial',   icon: '🏢', desc: 'High-rise & commercial buildings' },
 ]
 
 const COMP_FIELDS = [
@@ -33,11 +31,11 @@ const PRESETS = [
   },
   {
     label: '316L Stainless', icon: '✨',
-    values: { c:0.02, mn:1.80, si:0.50, cr:17.0, ni:12.0, mo:2.50, v:0, n:0.05, nb:0, co:0, w:0, al:0, ti:0, repair_cycles:0, application:'offshore' },
+    values: { c:0.02, mn:1.80, si:0.50, cr:17.0, ni:12.0, mo:2.50, v:0, n:0.05, nb:0, co:0, w:0, al:0, ti:0, repair_cycles:0, application:'commercial' },
   },
   {
     label: '4140 Alloy', icon: '⚙️',
-    values: { c:0.40, mn:0.90, si:0.25, cr:1.0, ni:0.15, mo:0.20, v:0, n:0, nb:0, co:0, w:0, al:0, ti:0, repair_cycles:0, application:'rotating_machinery' },
+    values: { c:0.40, mn:0.90, si:0.25, cr:1.0, ni:0.15, mo:0.20, v:0, n:0, nb:0, co:0, w:0, al:0, ti:0, repair_cycles:0, application:'structural' },
   },
   {
     label: 'HSLA 60', icon: '🌉',

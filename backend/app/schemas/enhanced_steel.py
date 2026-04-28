@@ -37,8 +37,8 @@ class EnhancedSteelInput(BaseModel):
         description="Number of repair (weld) cycles already performed (0–10)",
     )
     application: Literal[
-        "structural", "bridge", "pressure_vessel", "pipeline", "offshore", "rotating_machinery"
-    ] = Field("structural", description="Target application for the recommendation engine")
+        "structural", "bridge", "residential", "commercial"
+    ] = Field("structural", description="Target construction application for the recommendation engine")
 
     model_config = {
         "json_schema_extra": {
@@ -115,11 +115,7 @@ class Recommendation(BaseModel):
     remaining_repairs:   int
 
 
-class CostEstimate(BaseModel):
-    """Thin wrapper from cost_service."""
-    cost_per_m3_inr:  float
-    total_cost_inr:   float
-    cost_notes:       list[str] = []
+
 
 
 # ── Unified response ─────────────────────────────────────────────────────────
@@ -138,6 +134,3 @@ class EnhancedSteelPrediction(BaseModel):
 
     # Deterministic recommendation engine
     recommendation: Recommendation
-
-    # Cost integration (from cost_service thin wrapper)
-    cost: Optional[CostEstimate] = None

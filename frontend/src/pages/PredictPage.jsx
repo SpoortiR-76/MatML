@@ -8,38 +8,33 @@ import PredictionResult from '../components/predict/PredictionResult'
 import ConcreteForm from '../components/predict/ConcreteForm'
 import EnhancedSteelForm from '../components/predict/EnhancedSteelForm'
 import StructuralForm from '../components/predict/StructuralForm'
-import CostForm from '../components/predict/CostForm'
 
 const tabs = [
   { id: 'concrete',       label: 'Concrete',       icon: '🏗️' },
   { id: 'enhanced_steel', label: 'Enhanced Steel',  icon: '⚡' },
   { id: 'structural',     label: 'Structural',      icon: '📐' },
-  { id: 'cost',           label: 'Cost',            icon: '💰' },
 ]
 
 const formComponents = {
   concrete:       ConcreteForm,
   enhanced_steel: EnhancedSteelForm,
   structural:     StructuralForm,
-  cost:           CostForm,
 }
 
 const tabDescriptions = {
   concrete:       'Predict compressive strength from mix composition (cement, water, aggregates, age).',
   enhanced_steel: 'Six-module engine: elastic moduli, thermal properties, pre/post-repair strength, degradation profile, weldability class, nearest grade match, and cost — all from alloy composition.',
-  structural:     'Analyse a structural member. For steel, the engine recommends the optimal alloy composition from the enhanced model based on combined stress demand and exposure class.',
-  cost:           'Estimate material cost per volume with per-component contribution breakdown.',
+  structural:     'Analyse a structural member. The engine recommends the optimal materials based on combined stress demand, construction type, and your previous ML predictions.',
 }
 
 const submitLabels = {
   concrete:       'Predict Strength →',
   enhanced_steel: 'Run Full Steel Analysis →',
   structural:     'Analyse Structure →',
-  cost:           'Calculate Cost →',
 }
 
 export default function PredictPage() {
-  const { activeTab, setActiveTab, result, error } = usePredictionStore()
+  const { activeTab, setActiveTab, results, error } = usePredictionStore()
   const { submit, isLoading } = usePrediction()
   const ActiveForm = formComponents[activeTab]
 
@@ -108,7 +103,6 @@ export default function PredictPage() {
                   style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)' }}>
                   <p className="text-sm font-medium mb-1" style={{ color: '#f87171', fontFamily: 'DM Sans' }}>
                     {activeTab === 'structural' ? 'Analysis Error'
-                    : activeTab === 'cost' ? 'Calculation Error'
                     : 'Prediction Error'}
                   </p>
                   <p className="text-xs" style={{ color: '#fca5a5', fontFamily: 'JetBrains Mono, monospace' }}>
@@ -121,8 +115,8 @@ export default function PredictPage() {
         </motion.div>
 
         <AnimatePresence>
-          {result && !isLoading && (
-            <PredictionResult result={result} tab={activeTab} />
+          {results[activeTab] && !isLoading && (
+            <PredictionResult result={results[activeTab]} tab={activeTab} />
           )}
         </AnimatePresence>
       </div>

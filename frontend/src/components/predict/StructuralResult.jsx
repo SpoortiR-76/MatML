@@ -10,9 +10,7 @@ function SectionHeader({ label }) {
 // Steel recommendation panel — shown when material_type === 'steel'
 function SteelRecommendationPanel({ steelRec }) {
   if (!steelRec) return null
-  const { grade_name, estimated_lifespan_years, remaining_repairs, max_repair_cycles,
-          standard_reference, weldability_class, carbon_equivalent, verdict,
-          mechanical, thermal, strength } = steelRec
+  const { grade_name, estimated_lifespan_years, weldability_class, verdict } = steelRec
 
   const weldColors = {
     'Class I':   '#10b981',
@@ -39,64 +37,25 @@ function SteelRecommendationPanel({ steelRec }) {
             </p>
           </div>
           <div className="rounded-xl px-3 py-2" style={{ background: 'rgba(255,255,255,0.04)' }}>
-            <p className="text-xs" style={{ color: '#6b7280', fontFamily: 'DM Sans' }}>Repairs Allowed</p>
-            <p className="text-lg font-bold" style={{ color: '#f9fafb', fontFamily: 'Syne' }}>
-              {remaining_repairs} <span className="text-sm font-normal" style={{ color: '#9ca3af' }}>/ {max_repair_cycles}</span>
-            </p>
-          </div>
-          <div className="rounded-xl px-3 py-2" style={{ background: 'rgba(255,255,255,0.04)' }}>
-            <p className="text-xs" style={{ color: '#6b7280', fontFamily: 'DM Sans' }}>CE (IIW)</p>
-            <p className="text-lg font-bold font-mono" style={{ color: '#f9fafb' }}>{carbon_equivalent?.toFixed(3)}</p>
-          </div>
-          <div className="rounded-xl px-3 py-2" style={{ background: 'rgba(255,255,255,0.04)' }}>
-            <p className="text-xs mb-1" style={{ color: '#6b7280', fontFamily: 'DM Sans' }}>Weldability</p>
-            <span className="px-2 py-0.5 rounded-full text-xs font-bold"
-              style={{ background: `${wc}22`, border: `1px solid ${wc}55`, color: wc }}>
+            <p className="text-xs" style={{ color: '#6b7280', fontFamily: 'DM Sans' }}>Weldability</p>
+            <p className="text-lg font-bold" style={{ color: wc, fontFamily: 'Syne' }}>
               {weldability_class}
-            </span>
+            </p>
           </div>
         </div>
         <p className="text-xs leading-relaxed" style={{ color: '#d1d5db', fontFamily: 'DM Sans' }}>{verdict}</p>
-        <p className="text-xs mt-1.5" style={{ color: '#4b5563', fontFamily: 'DM Sans' }}>Standard: {standard_reference}</p>
       </div>
-
-      {/* Predicted properties */}
-      {mechanical && (
-        <div>
-          <SectionHeader label="Predicted Elastic Properties" />
-          <div className="grid grid-cols-3 gap-3">
-            <ResultCard label="Young's Modulus E" value={mechanical.E_mpa?.toLocaleString()} unit="MPa" />
-            <ResultCard label="Shear Modulus G"   value={mechanical.G_mpa?.toLocaleString()} unit="MPa" accent="#34d399" />
-            <ResultCard label="Poisson's Ratio μ" value={mechanical.mu?.toFixed(3)}          accent="#6ee7b7" />
-          </div>
-        </div>
-      )}
-      {thermal && (
-        <div>
-          <SectionHeader label="Predicted Thermal Properties" />
-          <div className="grid grid-cols-3 gap-3">
-            <ResultCard label="Conductivity"    value={thermal.thermal_conductivity_W_mK?.toFixed(1)} unit="W/m·K" />
-            <ResultCard label="Max Service Temp" value={thermal.critical_temperature_C?.toFixed(0)}   unit="°C"    accent="#f59e0b" />
-            <ResultCard label="Density"          value={thermal.density_kg_m3?.toFixed(0)}            unit="kg/m³" accent="#9ca3af" />
-          </div>
-        </div>
-      )}
-      {strength && (
-        <div>
-          <SectionHeader label="Predicted Strength" />
-          <div className="grid grid-cols-3 gap-3">
-            <ResultCard label="Ultimate Su" value={strength.su_mpa?.toFixed(0)} unit="MPa" />
-            <ResultCard label="Yield Sy"    value={strength.sy_mpa?.toFixed(0)} unit="MPa" accent="#34d399" />
-            <ResultCard label="Elongation"  value={strength.elongation_pct?.toFixed(1)} unit="%" accent="#6ee7b7" />
-          </div>
-        </div>
-      )}
     </div>
   )
 }
 
 export default function StructuralResults({ data }) {
-  const designColor = data.design_ok ? '#10b981' : '#f87171'
+  const statusColors = {
+    Safe: '#10b981',
+    Caution: '#f59e0b',
+    Unsafe: '#ef4444',
+  }
+  const designColor = statusColors[data.design_status] || '#9ca3af'
   const isSteelMode = data.material_type === 'steel'
 
   return (
@@ -129,8 +88,8 @@ export default function StructuralResults({ data }) {
         <SectionHeader label="Design Check" />
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <ResultCard label="Required Strength" value={data.required_strength_mpa}     unit="MPa" />
-          <ResultCard label="Safety Factor"     value={data.safety_factor?.toFixed(2)} accent={data.safety_factor >= 1.5 ? '#10b981' : '#f87171'} />
-          <ResultCard label="Design Status"     value={data.design_ok ? 'PASS ✓' : 'FAIL ✗'} accent={designColor} />
+          <ResultCard label="Safety Factor"     value={data.safety_factor?.toFixed(2)} accent={designColor} />
+          <ResultCard label="Design Status"     value={data.design_status}             accent={designColor} />
           <ResultCard label="Est. Service Life" value={data.estimated_service_life_years} unit="years" accent="#34d399" />
         </div>
       </div>

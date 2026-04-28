@@ -81,8 +81,7 @@
     "strength": "enhanced_steel_strength_scaler.pkl",
     "repair": "enhanced_steel_strength_scaler.pkl",
     "degrade": "enhanced_steel_strength_scaler.pkl",
-    "use": "enhanced_steel_strength_scaler.pkl",
-    "weld": "enhanced_steel_weld_scaler.pkl"
+    "use": "enhanced_steel_strength_scaler.pkl"
   },
   "metrics": {
     "mech": {
@@ -92,19 +91,16 @@
       "r2": 0.9971
     },
     "strength": {
-      "r2": 0.6143
+      "r2": 0.6101
     },
     "repair": {
       "r2": 0.5836
     },
     "degrade": {
-      "r2": 0.9995
+      "r2": 1.0
     },
     "use": {
       "accuracy": 0.9517
-    },
-    "weld_class": {
-      "accuracy": 1.0
     }
   },
   "document_targets": {

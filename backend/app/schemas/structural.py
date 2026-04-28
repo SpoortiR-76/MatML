@@ -26,11 +26,9 @@ class StructuralInput(BaseModel):
         "moderate", description="Environmental exposure class"
     )
 
-    # Steel recommendation context (only relevant when material_type='steel')
-    concrete_fck_mpa:  float = Field(30.0, ge=15.0, le=100.0, description="Concrete grade fck, MPa — used to size required steel strength")
-    steel_application: Literal[
-        "structural", "bridge", "pressure_vessel", "pipeline", "offshore", "rotating_machinery"
-    ] = Field("structural", description="Target application for steel grade recommendation")
+    construction_type: Literal["residential", "commercial", "bridge"] = Field("commercial", description="Type of construction")
+    predicted_concrete_fck_mpa: Optional[float] = Field(None, description="Previously predicted concrete fck")
+    predicted_steel_sy_mpa: Optional[float] = Field(None, description="Previously predicted steel Sy")
 
     model_config = {
         "json_schema_extra": {
@@ -45,6 +43,7 @@ class StructuralInput(BaseModel):
                 "shear_force_kn": 80.0,
                 "inclination_deg": 0.0,
                 "exposure_class": "moderate",
+                "construction_type": "commercial",
             }
         }
     }
@@ -77,7 +76,7 @@ class StructuralPrediction(BaseModel):
     # Capacity & safety
     required_strength_mpa: float
     safety_factor: float
-    design_ok: bool
+    design_status: Literal["Safe", "Caution", "Unsafe"]
 
     # Recommendations
     recommended_composition: Optional[RecommendedComposition] = None

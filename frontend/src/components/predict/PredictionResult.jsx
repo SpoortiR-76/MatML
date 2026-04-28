@@ -5,7 +5,7 @@ import ModelBadge from '../ui/ModelBadge'
 import ShapChart from './ShapChart'
 import StructuralResults from './StructuralResult'
 import EnhancedSteelResult from './EnhancedSteelResult'
-import CostResults from './CostResult'
+
 
 function ConcreteResults({ data }) {
   return (
@@ -23,12 +23,10 @@ const resultRenderers = {
   concrete:       ConcreteResults,
   enhanced_steel: EnhancedSteelResult,
   structural:     StructuralResults,
-  cost:           CostResults,
 }
 
 const TITLES = {
   structural:     'Structural Analysis Complete',
-  cost:           'Cost Estimate Ready',
   enhanced_steel: 'Enhanced Steel Analysis Complete',
   concrete:       'Prediction Complete',
 }

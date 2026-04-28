@@ -23,13 +23,10 @@ const EXPOSURES = [
   { value: 'very_severe', label: 'Very Severe', desc: 'Chemical / seawater' },
 ]
 
-const APPLICATIONS = [
-  { value: 'structural',        label: 'Structural',    icon: '🏗️' },
-  { value: 'bridge',            label: 'Bridge',        icon: '🌉' },
-  { value: 'pressure_vessel',   label: 'Pressure Vessel', icon: '⚗️' },
-  { value: 'pipeline',          label: 'Pipeline',      icon: '🔩' },
-  { value: 'offshore',          label: 'Offshore',      icon: '🌊' },
-  { value: 'rotating_machinery',label: 'Rotating',      icon: '⚙️' },
+const CONSTRUCTION_TYPES = [
+  { value: 'residential', label: 'Residential', icon: '🏠' },
+  { value: 'commercial',  label: 'Commercial',  icon: '🏢' },
+  { value: 'bridge',      label: 'Bridge',      icon: '🌉' },
 ]
 
 const dimensionFields = (shape) => {
@@ -52,14 +49,56 @@ const loadFields = [
 const pill = 'px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer transition-all border'
 
 export default function StructuralForm() {
-  const { formData, updateFormData } = usePredictionStore()
+  const { formData, updateFormData, results } = usePredictionStore()
   const data = formData.structural
-  const isSteelMode = data.material_type === 'steel'
+
 
   const handle = (name, value) => updateFormData('structural', name, value)
 
   return (
     <div className="space-y-6">
+      {/* Previously Predicted Properties widget */}
+      {(results.concrete || results.enhanced_steel) && (
+        <div className="rounded-xl p-4 space-y-2 mb-4" style={{ background: 'rgba(52,211,153,0.05)', border: '1px solid rgba(52,211,153,0.15)' }}>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#34d399', fontFamily: 'DM Sans' }}>
+            ✓ Using Previous Predictions
+          </p>
+          <div className="flex flex-wrap gap-4">
+            {results.concrete && (
+               <div className="text-xs">
+                 <span style={{ color: '#9ca3af' }}>Concrete Strength: </span>
+                 <span className="font-bold font-mono text-white">{results.concrete.predicted_compressive_strength_mpa?.toFixed(1)} MPa</span>
+               </div>
+            )}
+            {results.enhanced_steel && (
+               <div className="text-xs">
+                 <span style={{ color: '#9ca3af' }}>Steel Yield (Sy): </span>
+                 <span className="font-bold font-mono text-white">{results.enhanced_steel.strength?.sy_mpa?.toFixed(1)} MPa</span>
+               </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Construction Type */}
+      <div>
+        <p className="text-xs font-medium mb-2 uppercase tracking-widest" style={{ color: '#9ca3af', fontFamily: 'DM Sans' }}>
+          Construction Type
+        </p>
+        <div className="grid grid-cols-3 gap-2">
+          {CONSTRUCTION_TYPES.map(a => (
+            <button key={a.value} onClick={() => handle('construction_type', a.value)}
+              className="rounded-lg px-2 py-2 text-left border transition-all"
+              style={data.construction_type === a.value
+                ? { background: 'rgba(16,185,129,0.12)', borderColor: '#10b981' }
+                : { background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.07)' }}>
+              <p className="text-xs font-medium" style={{ color: data.construction_type === a.value ? '#10b981' : '#9ca3af', fontFamily: 'DM Sans' }}>
+                <span className="mr-1.5">{a.icon}</span>{a.label}
+              </p>
+            </button>
+          ))}
+        </div>
+      </div>
       {/* Shape */}
       <div>
         <p className="text-xs font-medium mb-2 uppercase tracking-widest" style={{ color: '#9ca3af', fontFamily: 'DM Sans' }}>
@@ -95,41 +134,7 @@ export default function StructuralForm() {
       </div>
 
       {/* Steel-specific: concrete grade input + application */}
-      {isSteelMode && (
-        <div className="rounded-xl p-4 space-y-4" style={{ background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.15)' }}>
-          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#10b981', fontFamily: 'DM Sans' }}>
-            ⚡ Steel Recommendation Engine
-          </p>
-          <p className="text-xs" style={{ color: '#6b7280', fontFamily: 'DM Sans' }}>
-            Enter the concrete grade of the slab/member being reinforced. The engine will compute combined stress demand and recommend the optimal steel alloy grade with all six predicted properties.
-          </p>
-          <InputField
-            name="concrete_fck_mpa" label="Concrete Grade (fck)"
-            unit="MPa" placeholder="30"
-            tooltip="Characteristic compressive strength of concrete (e.g. M30 = 30 MPa)"
-            min={15} max={100} step={5}
-            value={data.concrete_fck_mpa} onChange={handle}
-          />
-          <div>
-            <p className="text-xs font-medium mb-2 uppercase tracking-widest" style={{ color: '#9ca3af', fontFamily: 'DM Sans' }}>
-              Steel Application
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              {APPLICATIONS.map(a => (
-                <button key={a.value} onClick={() => handle('steel_application', a.value)}
-                  className="rounded-lg px-2 py-2 text-left border transition-all"
-                  style={data.steel_application === a.value
-                    ? { background: 'rgba(16,185,129,0.12)', borderColor: '#10b981' }
-                    : { background: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.07)' }}>
-                  <p className="text-xs font-medium" style={{ color: data.steel_application === a.value ? '#10b981' : '#9ca3af', fontFamily: 'DM Sans' }}>
-                    {a.icon} {a.label}
-                  </p>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Dimensions */}
       <div>

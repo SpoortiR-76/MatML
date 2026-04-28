@@ -17,7 +17,6 @@ from app.ml.enhanced_steel_inference import (
     predict_use,
     run_recommendation_engine,
 )
-from app.services.cost_service import _cost_steel  # thin wrapper
 
 logger = logging.getLogger(__name__)
 
@@ -64,11 +63,6 @@ _MOCK = {
         "standard_reference":       "BS EN 1993",
         "verdict":                  "Mock response — train models to get a real prediction.",
         "remaining_repairs":        8,
-    },
-    "cost": {
-        "cost_per_m3_inr":  410_000.0,
-        "total_cost_inr":   410_000.0,
-        "cost_notes":       ["Mock cost estimate — 1 m³ reference volume."],
     },
 }
 
@@ -153,18 +147,6 @@ def run_enhanced_steel_prediction(models: dict, input_data: dict) -> dict:
             application     = application,
         )
 
-        # Cost thin wrapper — 1 m³ reference volume
-        try:
-            cost_raw = _cost_steel(input_data, volume=1.0)
-            cost = {
-                "cost_per_m3_inr": round(cost_raw["total"] / 1.0, 2),
-                "total_cost_inr":  round(cost_raw["total"], 2),
-                "cost_notes":      cost_raw.get("notes", []),
-            }
-        except Exception as cost_exc:
-            logger.warning("Cost calculation failed: %s", cost_exc)
-            cost = {"cost_per_m3_inr": 0.0, "total_cost_inr": 0.0, "cost_notes": []}
-
         return {
             "status":         "success",
             "model_used":     MODEL_LABEL,
@@ -175,7 +157,6 @@ def run_enhanced_steel_prediction(models: dict, input_data: dict) -> dict:
             "degradation":    degradation,
             "suitability":    suitability,
             "recommendation": recommendation,
-            "cost":           cost,
         }
 
     except Exception as exc:

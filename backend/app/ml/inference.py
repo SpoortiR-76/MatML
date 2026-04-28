@@ -33,9 +33,13 @@ def get_shap_values(model: Any, X_scaled: np.ndarray, feature_names: list, top_n
     Falls back to an empty dict on any failure (model may not support TreeExplainer).
     """
     try:
-        import shap  # lazy import — keeps startup fast when shap isn't installed
+        import shap  # lazy import
 
-        explainer = shap.TreeExplainer(model)
+        # Cache explainer on the model to avoid re-initializing (slow for RF)
+        if not hasattr(model, "_shap_explainer"):
+            model._shap_explainer = shap.TreeExplainer(model)
+        
+        explainer = model._shap_explainer
         shap_vals = explainer.shap_values(X_scaled, check_additivity=False)
 
         # Binary classification → class 1 values
@@ -47,7 +51,7 @@ def get_shap_values(model: Any, X_scaled: np.ndarray, feature_names: list, top_n
             shap_vals = shap_vals[0]
 
         pairs = sorted(
-            zip(feature_names, shap_vals.tolist()),
+            zip(feature_names, shap_vals.tolist() if hasattr(shap_vals, 'tolist') else shap_vals),
             key=lambda x: abs(x[1]),
             reverse=True,
         )
